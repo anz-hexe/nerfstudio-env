@@ -1,0 +1,26 @@
+---
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: nerfstudio-with-jupyter:latest
+    command: jupyter lab --port=8811 --ip=0.0.0.0 --NotebookApp.token="" --notebook-dir=/notebooks
+
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "8811:8811"
+      - "7007:7007"
+    volumes:
+      - ${PWD}:/workspace
+      - ${PWD}/notebooks:/notebooks
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
